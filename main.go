@@ -166,6 +166,32 @@ func MapAddInt(mapName, statName string, delta int64) error {
 	return nil
 }
 
+// MapIncrementInt increment int in a map
+func MapIncrementInt(mapName, statName string) error {
+	mapsmu.Lock()
+	defer mapsmu.Unlock()
+	if _, ok := maps[mapName]; !ok {
+		maps[mapName] = expvar.NewMap(mapName)
+	}
+
+	maps[mapName].Add(statName, 1)
+
+	return nil
+}
+
+// MapDecrementInt decrement int in a map
+func MapDecrementInt(mapName, statName string) error {
+	mapsmu.Lock()
+	defer mapsmu.Unlock()
+	if _, ok := maps[mapName]; !ok {
+		maps[mapName] = expvar.NewMap(mapName)
+	}
+
+	maps[mapName].Add(statName, -1)
+
+	return nil
+}
+
 // MapAddFloat adds delta to a float in a map
 func MapAddFloat(mapName, statName string, delta float64) error {
 	mapsmu.Lock()
@@ -175,6 +201,19 @@ func MapAddFloat(mapName, statName string, delta float64) error {
 	}
 
 	maps[mapName].AddFloat(statName, delta)
+
+	return nil
+}
+
+// MapSet statName to value in a map
+func MapSet(mapName, statName string, v expvar.Var) error {
+	mapsmu.Lock()
+	defer mapsmu.Unlock()
+	if _, ok := maps[mapName]; !ok {
+		maps[mapName] = expvar.NewMap(mapName)
+	}
+
+	maps[mapName].Set(statName, v)
 
 	return nil
 }

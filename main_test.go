@@ -5,14 +5,17 @@
 
 package appstats
 
-import "testing"
+import (
+	"bytes"
+	"testing"
+)
 
 func TestNewString(t *testing.T) {
 	t.Log("NewString")
 
 	t.Log("valid")
 	{
-		err := NewString("foo")
+		err := NewString("s1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -20,7 +23,7 @@ func TestNewString(t *testing.T) {
 
 	t.Log("already exists")
 	{
-		err := NewString("foo")
+		err := NewString("s1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -32,12 +35,15 @@ func TestSetString(t *testing.T) {
 
 	t.Log("valid, exists")
 	{
-		err := SetString("foo", "bar")
+		err := SetString("s1", "bar")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 		expect := `"bar"`
-		v := stats.Get("foo")
+		v := stats.Get("s1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -45,13 +51,16 @@ func TestSetString(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := SetString("bar", "foo")
+		err := SetString("s2", "bar")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
-		expect := `"foo"`
-		v := stats.Get("bar")
+		expect := `"bar"`
+		v := stats.Get("s2")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -63,7 +72,7 @@ func TestNewInt(t *testing.T) {
 
 	t.Log("valid")
 	{
-		err := NewInt("foo_int")
+		err := NewInt("i1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -71,7 +80,7 @@ func TestNewInt(t *testing.T) {
 
 	t.Log("already exists")
 	{
-		err := NewInt("foo_int")
+		err := NewInt("i1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -83,13 +92,16 @@ func TestSetInt(t *testing.T) {
 
 	t.Log("valid, exists")
 	{
-		err := SetInt("foo_int", 10)
+		err := SetInt("i1", 10)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "10"
-		v := stats.Get("foo_int")
+		v := stats.Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -97,13 +109,16 @@ func TestSetInt(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := SetInt("bar_int", 10)
+		err := SetInt("i2", 10)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := `10`
-		v := stats.Get("bar_int")
+		v := stats.Get("i2")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -115,13 +130,16 @@ func TestIncrementInt(t *testing.T) {
 
 	t.Log("valid, exists")
 	{
-		err := IncrementInt("foo_int")
+		err := IncrementInt("i1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "11"
-		v := stats.Get("foo_int")
+		v := stats.Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -129,13 +147,16 @@ func TestIncrementInt(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := IncrementInt("bar_int2")
+		err := IncrementInt("i3")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "1"
-		v := stats.Get("bar_int2")
+		v := stats.Get("i3")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -147,13 +168,16 @@ func TestDecrementInt(t *testing.T) {
 
 	t.Log("valid, exists")
 	{
-		err := DecrementInt("foo_int")
+		err := DecrementInt("i1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "10"
-		v := stats.Get("foo_int")
+		v := stats.Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -161,13 +185,16 @@ func TestDecrementInt(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := DecrementInt("bar_int3")
+		err := DecrementInt("i4")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "-1"
-		v := stats.Get("bar_int3")
+		v := stats.Get("i4")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -179,15 +206,16 @@ func TestAddInt(t *testing.T) {
 
 	t.Log("valid")
 	{
-		err := AddInt("foo_intadd", 10)
+		err := AddInt("i1", 10)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
-		AddInt("foo_intadd", 5)
-
-		expect := "15"
-		v := stats.Get("foo_intadd")
+		expect := "20"
+		v := stats.Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -195,13 +223,16 @@ func TestAddInt(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := AddInt("bar_intadd", -1)
+		err := AddInt("i5", -1)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "-1"
-		v := stats.Get("bar_intadd")
+		v := stats.Get("i5")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -213,7 +244,7 @@ func TestNewFloat(t *testing.T) {
 
 	t.Log("valid")
 	{
-		err := NewFloat("foo_float")
+		err := NewFloat("f1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -221,7 +252,7 @@ func TestNewFloat(t *testing.T) {
 
 	t.Log("already exists")
 	{
-		err := NewFloat("foo_float")
+		err := NewFloat("f1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -233,13 +264,16 @@ func TestSetFloat(t *testing.T) {
 
 	t.Log("valid, exists")
 	{
-		err := SetFloat("foo_float", 1.23)
+		err := SetFloat("f1", 1.23)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "1.23"
-		v := stats.Get("foo_float")
+		v := stats.Get("f1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -247,13 +281,16 @@ func TestSetFloat(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := SetFloat("bar_float", 1.23)
+		err := SetFloat("f2", 1.23)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := `1.23`
-		v := stats.Get("bar_float")
+		v := stats.Get("f2")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -265,13 +302,16 @@ func TestAddFloat(t *testing.T) {
 
 	t.Log("valid, exists")
 	{
-		err := AddFloat("foo_float", 3.0)
+		err := AddFloat("f1", 3.0)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "4.23"
-		v := stats.Get("foo_float")
+		v := stats.Get("f1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -279,13 +319,16 @@ func TestAddFloat(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := AddFloat("bar_float2", 1.23)
+		err := AddFloat("f3", 1.23)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := `1.23`
-		v := stats.Get("bar_float2")
+		v := stats.Get("f3")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -297,7 +340,7 @@ func TestNewMap(t *testing.T) {
 
 	t.Log("valid")
 	{
-		err := NewMap("foo")
+		err := NewMap("m1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -305,7 +348,7 @@ func TestNewMap(t *testing.T) {
 
 	t.Log("already exists")
 	{
-		err := NewMap("foo")
+		err := NewMap("m1")
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
@@ -315,14 +358,34 @@ func TestNewMap(t *testing.T) {
 func TestMapAddInt(t *testing.T) {
 	t.Log("MapAddInt")
 
-	t.Log("valid, exists")
+	t.Log("valid")
 	{
-		err := MapAddInt("foo", "bar_i", 1)
+		err := MapAddInt("m1", "i1", 1)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 		expect := "1"
-		v := maps["foo"].Get("bar_i")
+		v := maps["m1"].Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
+		if v.String() != expect {
+			t.Fatalf("expected (%s), got (%s)", expect, v.String())
+		}
+	}
+
+	t.Log("valid, exists")
+	{
+		err := MapAddInt("m1", "i1", 2)
+		if err != nil {
+			t.Fatalf("expected no error, got (%s)", err)
+		}
+
+		expect := "3"
+		v := maps["m1"].Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -330,13 +393,56 @@ func TestMapAddInt(t *testing.T) {
 
 	t.Log("valid, does not exist")
 	{
-		err := MapAddInt("bar", "foo_i", 2)
+		err := MapAddInt("m2", "i1", 2)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
 		expect := "2"
-		v := maps["bar"].Get("foo_i")
+		v := maps["m2"].Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
+		if v.String() != expect {
+			t.Fatalf("expected (%s), got (%s)", expect, v.String())
+		}
+	}
+}
+
+func TestMapIncrementInt(t *testing.T) {
+	t.Log("MapIncrementInt")
+
+	t.Log("valid")
+	{
+		err := MapIncrementInt("m1", "i1")
+		if err != nil {
+			t.Fatalf("expected no error, got (%s)", err)
+		}
+		expect := "4"
+		v := maps["m1"].Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
+		if v.String() != expect {
+			t.Fatalf("expected (%s), got (%s)", expect, v.String())
+		}
+	}
+}
+
+func TestMapDecrementInt(t *testing.T) {
+	t.Log("MapDecrementInt")
+
+	t.Log("valid")
+	{
+		err := MapDecrementInt("m1", "i1")
+		if err != nil {
+			t.Fatalf("expected no error, got (%s)", err)
+		}
+		expect := "3"
+		v := maps["m1"].Get("i1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
@@ -346,28 +452,73 @@ func TestMapAddInt(t *testing.T) {
 func TestMapAddFloat(t *testing.T) {
 	t.Log("MapAddFloat")
 
-	t.Log("valid, exists")
+	t.Log("valid")
 	{
-		err := MapAddFloat("foo", "bar_f", 1.23)
+		err := MapAddFloat("m1", "f1", 1.23)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 		expect := "1.23"
-		v := maps["foo"].Get("bar_f")
+		v := maps["m1"].Get("f1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
 	}
 
-	t.Log("valid, does not exist")
+	t.Log("valid, exists")
 	{
-		err := MapAddFloat("bar", "foo_f", 1.32)
+		err := MapAddFloat("m1", "f1", 1.32)
 		if err != nil {
 			t.Fatalf("expected no error, got (%s)", err)
 		}
 
-		expect := "1.32"
-		v := maps["bar"].Get("foo_f")
+		expect := "2.55"
+		v := maps["m1"].Get("f1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
+		if v.String() != expect {
+			t.Fatalf("expected (%s), got (%s)", expect, v.String())
+		}
+	}
+}
+
+func TestMapSet(t *testing.T) {
+	t.Log("MapSet")
+
+	t.Log("valid")
+	{
+		x := bytes.NewBufferString("baz")
+		err := MapSet("m1", "s1", x)
+		if err != nil {
+			t.Fatalf("expected no error, got (%s)", err)
+		}
+		expect := "baz"
+		v := maps["m1"].Get("s1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
+		if v.String() != expect {
+			t.Fatalf("expected (%s), got (%s)", expect, v.String())
+		}
+	}
+
+	t.Log("valid, exists")
+	{
+		x := bytes.NewBufferString("baz2")
+		err := MapSet("m1", "s1", x)
+		if err != nil {
+			t.Fatalf("expected no error, got (%s)", err)
+		}
+
+		expect := "baz2"
+		v := maps["m1"].Get("s1")
+		if v == nil {
+			t.Fatal("expected not nil")
+		}
 		if v.String() != expect {
 			t.Fatalf("expected (%s), got (%s)", expect, v.String())
 		}
